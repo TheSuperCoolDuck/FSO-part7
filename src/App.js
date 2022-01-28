@@ -4,11 +4,10 @@ import {
   BrowserRouter as Router,
   Switch, Route, Link,
   useRouteMatch,
+  useHistory,
 } from 'react-router-dom'
 
 const Anecdote = ({anecdote})=>{
-  console.log(anecdote)
-
   return(
     <div>
       <h2>{anecdote.content} by {anecdote.author}</h2>
@@ -88,10 +87,25 @@ const CreateNew = (props) => {
       </form>
     </div>
   )
+}
 
+const Notification = ({notification}) =>{
+  
+  console.log(notification)
+  if(notification===''){
+    return <></>
+  }
+
+  return(
+    <div>
+      {notification}
+    </div>
+  )
 }
 
 const App = () => {
+  const history = useHistory()
+
   const [anecdotes, setAnecdotes] = useState([
     {
       content: 'If it hurts, do it more often',
@@ -114,6 +128,13 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
+    history.push('/')
+    setNotification(`a new anecdote ${anecdote.content} created!`)
+    Notification(notification)
+    setTimeout(() =>{
+      setNotification('')
+      Notification(notification)
+    }, 10000)
   }
 
   const anecdoteById = (id) =>
@@ -135,12 +156,10 @@ const App = () => {
   }
 
   const match = useRouteMatch('/ancedotes/:id')
-  console.log("match", match)
   const anecdote = match
     ? anecdoteById(Number(match.params.id))
     : null
 
-  console.log(anecdote)
 
   return (
     <div>
@@ -151,7 +170,7 @@ const App = () => {
           <Link style={padding} to="/create">create new</Link>
           <Link style={padding} to="about">about</Link>
         </div>
-
+        <Notification notification={notification}/>
         <Switch>
           <Route path="/ancedotes/:id">
             <Anecdote anecdote={anecdote}/>
