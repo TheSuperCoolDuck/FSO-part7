@@ -2,14 +2,29 @@ import React, { useState } from 'react'
 
 import {
   BrowserRouter as Router,
-  Switch, Route, Link
+  Switch, Route, Link,
+  useRouteMatch,
 } from 'react-router-dom'
+
+const Anecdote = ({anecdote})=>{
+  console.log(anecdote)
+
+  return(
+    <div>
+      <h2>{anecdote.content} by {anecdote.author}</h2>
+      <p>has {anecdote.votes} votes</p>
+    </div>
+  )
+}
 
 const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id} >{anecdote.content}</li>)}
+      {anecdotes.map(anecdote => 
+        <li key={anecdote.id} >
+          <Link to={`/ancedotes/${anecdote.id}`}>{anecdote.content}</Link>
+        </li>)}
     </ul>
   </div>
 )
@@ -31,7 +46,8 @@ const About = () => (
 const Footer = () => (
   <div>
     Anecdote app for <a href='https://courses.helsinki.fi/fi/tkt21009'>Full Stack -websovelluskehitys</a>.
-
+    <br/>
+    <br/>
     See <a href='https://github.com/fullstack-hy/routed-anecdotes/blob/master/src/App.js'>https://github.com/fullstack-hy2019/routed-anecdotes/blob/master/src/App.js</a> for the source code.
   </div>
 )
@@ -101,9 +117,9 @@ const App = () => {
   }
 
   const anecdoteById = (id) =>
-    anecdotes.find(a => a.id === id)
-
-  const vote = (id) => {
+    anecdotes.find(a => a.id == id)
+  
+    const vote = (id) => {
     const anecdote = anecdoteById(id)
 
     const voted = {
@@ -118,10 +134,18 @@ const App = () => {
     paddingRight: 5
   }
 
+  const match = useRouteMatch('/ancedotes/:id')
+  console.log("match", match)
+  const anecdote = match
+    ? anecdoteById(Number(match.params.id))
+    : null
+
+  console.log(anecdote)
+
   return (
     <div>
       <h1>Software anecdotes</h1>
-      <Router>
+      <div>
         <div>
           <Link style={padding} to="/">anecdotes</Link>
           <Link style={padding} to="/create">create new</Link>
@@ -129,6 +153,9 @@ const App = () => {
         </div>
 
         <Switch>
+          <Route path="/ancedotes/:id">
+            <Anecdote anecdote={anecdote}/>
+          </Route>
           <Route path="/create">
             <CreateNew addNew={addNew} />        
           </Route>
@@ -139,7 +166,7 @@ const App = () => {
             <AnecdoteList anecdotes={anecdotes} />
           </Route>
         </Switch>
-      </Router>      
+      </div>      
       <Footer />
     </div>
   )
