@@ -3,10 +3,11 @@ import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { applyMiddleware } from 'redux'
 
-
+import blogReducer from './reducer/blogReducer'
 import notificationReducer from './reducer/notificationReducer'
 
 const reducer=combineReducers({
+  blogs: blogReducer,
   notification: notificationReducer
 })
 

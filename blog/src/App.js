@@ -8,17 +8,18 @@ import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createNotification } from './reducer/notificationReducer'
+import { initalizeBlogs, createBlog } from './reducer/blogReducer'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-
   const [username, setUsername] = useState([])
   const [password, setPassword] = useState([])
   const [user, setUser] = useState(null)
 
   const dispatch = useDispatch()
+
+  const blogs = useSelector(state => state.blogs)
 
   const handleLogout = (event) => {
     event.preventDefault()
@@ -53,34 +54,27 @@ const App = () => {
 
     blogService
       .update(blog.id, changedBlog)
-      .then(returnedBlog => {
-        setBlogs(blogs.map(blog => blog.id!==id?blog:returnedBlog))
-      })
+      //.then(returnedBlog => {
+      //  setBlogs(blogs.map(blog => blog.id!==id?blog:returnedBlog))
+      //})
   }
 
   const deleteBlog = (id) => {
     blogService
       .remove(id)
-      .then(returnedId => {
-        setBlogs(blogs.filter(blog => blog.id!==returnedId))
-      })
+      //.then(returnedId => {
+      //  setBlogs(blogs.filter(blog => blog.id!==returnedId))
+      //})
   }
 
   const addBlog = (blogObject) => {
     dispatch(createNotification(`a new blog ${blogObject.title} by ${blogObject.author} added`,5000))
-
-    blogService
-      .create(blogObject)
-      .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
-      })
+    dispatch(createBlog(blogObject))
   }
 
   useEffect(() => {
-    blogService
-      .getAll()
-      .then(blogs => setBlogs( blogs ))
-  }, [])
+    dispatch(initalizeBlogs())
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
