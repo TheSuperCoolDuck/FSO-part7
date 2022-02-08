@@ -20,6 +20,18 @@ const reducer = (state=[], action)=>{
       return action.data
     case 'NEW_ANECDOTE':
       return [...state, action.data]
+    case 'VOTE_ANECDOTE':
+      const id = action.data
+      const anecdoteToChange = state.find(a=>Number(a.id)==id)
+      const changedAnecdote = {
+        ...anecdoteToChange,
+        votes: anecdoteToChange.votes+1
+      }
+      return state.map(anecdote=>
+        anecdote.id!==id ? anecdote: changedAnecdote)
+    case 'DELETE_ANECDOTE':
+      console.log(action.data)
+      return state.filter(a=>Number(a.id)!=action.data)
     default:
       return state
   }
@@ -45,6 +57,24 @@ export const createAnecdote=({content, author, info})=>{
         votes: 0,
         id: (Math.random() * 10000).toFixed(0)
       }
+    })
+  }
+}
+
+export const voteAnecdote=(anecdoteId)=>{
+  return async dispatch=>{
+    dispatch({
+      type: 'VOTE_ANECDOTE',
+      data: anecdoteId
+    })
+  }
+}
+
+export const deleteAnecdote=(anecdoteId)=>{
+  return async dispatch=>{
+    dispatch({
+      type: 'DELETE_ANECDOTE',
+      data: anecdoteId
     })
   }
 }

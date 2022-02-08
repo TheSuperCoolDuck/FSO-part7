@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import {useField} from './hooks'
 
 import {
@@ -9,19 +9,11 @@ import {
 
 import Notification from './components/Notification'
 import AnecdoteList from './components/AnecdoteList'
+import Anecdote from './components/Anecdote'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { createNotification } from './reducer/notificationReducer'
-import { initalizeAnecdotes, createAnecdote } from './reducer/anecdoteReducer'
-
-const Anecdote = ({anecdote})=>{
-  return(
-    <div>
-      <h2>{anecdote.content} by {anecdote.author}</h2>
-      <p>has {anecdote.votes} votes</p>
-    </div>
-  )
-}
+import { initalizeAnecdotes, createAnecdote} from './reducer/anecdoteReducer'
 
 const About = () => (
   <div>
@@ -106,27 +98,13 @@ const App = () => {
     dispatch(createNotification(`a new anecdote ${anecdote.content} created!`, 10000))
   }
 
-  const anecdoteById = (id) =>
-    anecdotes.find(a => a.id == id)
-  
-  const vote = (id) => {
-    const anecdote = anecdoteById(id)
-
-    const voted = {
-      ...anecdote,
-      votes: anecdote.votes + 1
-    }
-
-    //setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
-  }
-
   const padding = {
     paddingRight: 5
   }
 
   const match = useRouteMatch('/ancedotes/:id')
   const anecdote = match
-    ? anecdoteById(Number(match.params.id))
+    ? anecdotes.find(a => a.id == Number(match.params.id))
     : null
 
 
