@@ -7,6 +7,11 @@ import {
   useHistory,
 } from 'react-router-dom'
 
+import Notification from './components/Notification'
+
+import { useDispatch } from 'react-redux'
+import { createNotification } from './reducer/notificationReducer'
+
 const Anecdote = ({anecdote})=>{
   return(
     <div>
@@ -95,21 +100,9 @@ const CreateNew = (props) => {
   )
 }
 
-const Notification = ({notification}) =>{
-  
-  console.log(notification)
-  if(notification===''){
-    return <></>
-  }
-
-  return(
-    <div>
-      {notification}
-    </div>
-  )
-}
-
 const App = () => {
+  const dispatch = useDispatch()
+
   const history = useHistory()
 
   const [anecdotes, setAnecdotes] = useState([
@@ -129,24 +122,17 @@ const App = () => {
     }
   ])
 
-  const [notification, setNotification] = useState('')
-
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
     history.push('/')
-    setNotification(`a new anecdote ${anecdote.content} created!`)
-    Notification(notification)
-    setTimeout(() =>{
-      setNotification('')
-      Notification(notification)
-    }, 10000)
+    dispatch(createNotification(`a new anecdote ${anecdote.content} created!`, 10000))
   }
 
   const anecdoteById = (id) =>
     anecdotes.find(a => a.id == id)
   
-    const vote = (id) => {
+  const vote = (id) => {
     const anecdote = anecdoteById(id)
 
     const voted = {
@@ -176,7 +162,7 @@ const App = () => {
           <Link style={padding} to="/create">create new</Link>
           <Link style={padding} to="about">about</Link>
         </div>
-        <Notification notification={notification}/>
+        <Notification/>
         <Switch>
           <Route path="/ancedotes/:id">
             <Anecdote anecdote={anecdote}/>
