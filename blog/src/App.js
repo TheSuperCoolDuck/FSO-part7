@@ -10,7 +10,7 @@ import loginService from './services/login'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { createNotification } from './reducer/notificationReducer'
-import { initalizeBlogs, createBlog } from './reducer/blogReducer'
+import { initalizeBlogs, createBlog, likesBlog, deleteBlog } from './reducer/blogReducer'
 
 const App = () => {
   const [username, setUsername] = useState([])
@@ -46,25 +46,6 @@ const App = () => {
     } catch (expection){
       dispatch(createNotification('wrong username or password',5000))
     }
-  }
-
-  const likeBlog = (id) => {
-    const blog = blogs.find(b => b.id===id)
-    const changedBlog = { ...blog, likes:blog.likes+1 }
-
-    blogService
-      .update(blog.id, changedBlog)
-      //.then(returnedBlog => {
-      //  setBlogs(blogs.map(blog => blog.id!==id?blog:returnedBlog))
-      //})
-  }
-
-  const deleteBlog = (id) => {
-    blogService
-      .remove(id)
-      //.then(returnedId => {
-      //  setBlogs(blogs.filter(blog => blog.id!==returnedId))
-      //})
   }
 
   const addBlog = (blogObject) => {
@@ -136,8 +117,8 @@ const App = () => {
             <Blog
               key={blog.id}
               blog={blog}
-              likeBlog={() => likeBlog(blog.id)}
-              deleteBlog={() => deleteBlog(blog.id)} />
+              likeBlog={() => dispatch(likesBlog(blog))}
+              deleteBlog={() => dispatch(deleteBlog(blog.id))} />
           )}
         </div>
       }

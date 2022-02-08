@@ -7,17 +7,16 @@ const reducer = (state=[], action) => {
     return action.data
   case 'NEW_BLOG':
     return [...state, action.data]
-  case 'VOTE_BLOG':
+  case 'LIKE_BLOG':
     const id = action.data
-    const blogToChange = state.find(b => Number(b.id)===id)
+    const blogToChange = state.find(b => b.id===id)
     const changedBlog = {
       ...blogToChange,
-      votes: blogToChange.votes+1
+      likes: blogToChange.likes+1
     }
     return state.map(blog =>
       blog.id!==id ? blog: changedBlog)
   case 'DELETE_BLOG':
-    console.log(action.data)
     return state.filter(b => Number(b.id)!==action.data)
   default:
     return state
@@ -44,17 +43,20 @@ export const createBlog = blogObject => {
   }
 }
 
-export const voteBlog=(blogId) => {
+export const likesBlog=(blogObject) => {
   return async dispatch => {
+    console.log(blogObject)
+    await blogService.update(blogObject.id,{ ...blogObject, likes: blogObject.likes+1 })
     dispatch({
-      type: 'VOTE_BLOG',
-      data: blogId
+      type: 'LIKE_BLOG',
+      data: blogObject.id
     })
   }
 }
 
 export const deleteBlog=(blogId) => {
   return async dispatch => {
+    await blogService.remove(blogId)
     dispatch({
       type: 'DELETE_BLOG',
       data: blogId
