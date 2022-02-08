@@ -11,12 +11,11 @@ const notificationReducer = (state="", action)=>{
 
 export const clearNotification=()=>{
   return{
-    type: 'CLEAR_NOTIFCATION'
+    type: 'CLEAR_NOTIFICATION'
   }
 }
 
 export const createNotification=(message,timeout)=>{
-  console.log('wdwd89')
   return async dispatch=>{
     setTimeout(()=>{
       dispatch(clearNotification())

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {useField} from './hooks'
 
 import {
@@ -8,9 +8,11 @@ import {
 } from 'react-router-dom'
 
 import Notification from './components/Notification'
+import AnecdoteList from './components/AnecdoteList'
 
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createNotification } from './reducer/notificationReducer'
+import { initalizeAnecdotes, createAnecdote } from './reducer/anecdoteReducer'
 
 const Anecdote = ({anecdote})=>{
   return(
@@ -20,18 +22,6 @@ const Anecdote = ({anecdote})=>{
     </div>
   )
 }
-
-const AnecdoteList = ({ anecdotes }) => (
-  <div>
-    <h2>Anecdotes</h2>
-    <ul>
-      {anecdotes.map(anecdote => 
-        <li key={anecdote.id} >
-          <Link to={`/ancedotes/${anecdote.id}`}>{anecdote.content}</Link>
-        </li>)}
-    </ul>
-  </div>
-)
 
 const About = () => (
   <div>
@@ -102,29 +92,16 @@ const CreateNew = (props) => {
 
 const App = () => {
   const dispatch = useDispatch()
-
   const history = useHistory()
 
-  const [anecdotes, setAnecdotes] = useState([
-    {
-      content: 'If it hurts, do it more often',
-      author: 'Jez Humble',
-      info: 'https://martinfowler.com/bliki/FrequencyReducesDifficulty.html',
-      votes: 0,
-      id: '1'
-    },
-    {
-      content: 'Premature optimization is the root of all evil',
-      author: 'Donald Knuth',
-      info: 'http://wiki.c2.com/?PrematureOptimization',
-      votes: 0,
-      id: '2'
-    }
-  ])
+  const anecdotes = useSelector(state=>state.anecdotes)
+
+  useEffect(()=>{
+    dispatch(initalizeAnecdotes())
+  }, [dispatch])
 
   const addNew = (anecdote) => {
-    anecdote.id = (Math.random() * 10000).toFixed(0)
-    setAnecdotes(anecdotes.concat(anecdote))
+    dispatch(createAnecdote(anecdote))
     history.push('/')
     dispatch(createNotification(`a new anecdote ${anecdote.content} created!`, 10000))
   }
@@ -140,7 +117,7 @@ const App = () => {
       votes: anecdote.votes + 1
     }
 
-    setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
+    //setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
   }
 
   const padding = {
