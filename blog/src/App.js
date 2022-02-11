@@ -11,7 +11,10 @@ import loginService from './services/login'
 import { useDispatch, useSelector } from 'react-redux'
 import { createNotification } from './reducer/notificationReducer'
 import { initalizeBlogs, createBlog, likesBlog, deleteBlog } from './reducer/blogReducer'
-import { setUser ,clearUser } from './reducer/userReducer'
+import { setUser ,clearUser } from './reducer/loggedUserReducer'
+
+import { Switch, Route } from 'react-router-dom'
+import { initalizeUsers } from './reducer/userReducer'
 
 const App = () => {
   const [username, setUsername] = useState([])
@@ -20,7 +23,8 @@ const App = () => {
   const dispatch = useDispatch()
 
   const blogs = useSelector(state => state.blogs)
-  const user = useSelector(state => state.user)
+  const loggedUser = useSelector(state => state.loggedUser)
+  const users = useSelector(state => state.users)
 
   const handleLogout = (event) => {
     event.preventDefault()
@@ -56,6 +60,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initalizeBlogs())
+    dispatch(initalizeUsers())
   }, [dispatch])
 
   useEffect(() => {
@@ -101,26 +106,48 @@ const App = () => {
 
   blogs.sort((a,b) => a.likes-b.likes).reverse()
 
+  console.log(users)
+
   return (
     <div>
       <Notification/>
-      {user===null ?
+      {loggedUser===null ?
         <div>
           <h2>log in to application</h2>
           {loginForm()}
         </div> :
         <div>
           <h2>blogs</h2>
-          <p>{user.name} logged-in <button onClick={handleLogout}>logout</button></p>
-          <h2>create new</h2>
-          {blogForm()}
-          {blogs.map(blog =>
-            <Blog
-              key={blog.id}
-              blog={blog}
-              likeBlog={() => dispatch(likesBlog(blog))}
-              deleteBlog={() => dispatch(deleteBlog(blog.id))} />
-          )}
+          <p>{loggedUser.name} logged-in <button onClick={handleLogout}>logout</button></p>
+
+          <Switch>
+            <Route path="/users">
+              <h2>Users</h2>
+              <table>
+                <tr>
+                  <th></th>
+                  <th>blogs created</th>
+                </tr>
+                {users.map(user =>
+                  <tr key={user.id}>
+                    <td>{user.name}</td>
+                    <td>{user.blogs.length}</td>
+                  </tr>
+                )}
+              </table>
+            </Route>
+            <Route path="/">
+              <h2>create new</h2>
+              {blogForm()}
+              {blogs.map(blog =>
+                <Blog
+                  key={blog.id}
+                  blog={blog}
+                  likeBlog={() => dispatch(likesBlog(blog))}
+                  deleteBlog={() => dispatch(deleteBlog(blog.id))} />
+              )}
+            </Route>
+          </Switch>
         </div>
       }
     </div>
