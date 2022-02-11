@@ -17,7 +17,7 @@ const reducer = (state=[], action) => {
     return state.map(blog =>
       blog.id!==id ? blog: changedBlog)
   case 'DELETE_BLOG':
-    return state.filter(b => Number(b.id)!==action.data)
+    return state.filter(b => b.id!==action.data)
   default:
     return state
   }

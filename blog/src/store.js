@@ -5,10 +5,12 @@ import { applyMiddleware } from 'redux'
 
 import blogReducer from './reducer/blogReducer'
 import notificationReducer from './reducer/notificationReducer'
+import userReducer from './reducer/userReducer'
 
 const reducer=combineReducers({
   blogs: blogReducer,
-  notification: notificationReducer
+  notification: notificationReducer,
+  user: userReducer
 })
 
 const store = createStore(
