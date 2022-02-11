@@ -4,6 +4,7 @@ import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
+import User from './components/User'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -13,7 +14,7 @@ import { createNotification } from './reducer/notificationReducer'
 import { initalizeBlogs, createBlog, likesBlog, deleteBlog } from './reducer/blogReducer'
 import { setUser ,clearUser } from './reducer/loggedUserReducer'
 
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Link } from 'react-router-dom'
 import { initalizeUsers } from './reducer/userReducer'
 
 const App = () => {
@@ -106,8 +107,6 @@ const App = () => {
 
   blogs.sort((a,b) => a.likes-b.likes).reverse()
 
-  console.log(users)
-
   return (
     <div>
       <Notification/>
@@ -121,6 +120,9 @@ const App = () => {
           <p>{loggedUser.name} logged-in <button onClick={handleLogout}>logout</button></p>
 
           <Switch>
+            <Route path="/users/:id">
+              <User users={users}/>
+            </Route>
             <Route path="/users">
               <h2>Users</h2>
               <table>
@@ -130,7 +132,7 @@ const App = () => {
                 </tr>
                 {users.map(user =>
                   <tr key={user.id}>
-                    <td>{user.name}</td>
+                    <td><Link to={`/users/${user.id}`}>{user.name}</Link></td>
                     <td>{user.blogs.length}</td>
                   </tr>
                 )}
