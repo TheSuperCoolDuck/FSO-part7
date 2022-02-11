@@ -5,6 +5,7 @@ import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
 import User from './components/User'
+import BlogView from './components/BlogView'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -107,19 +108,39 @@ const App = () => {
 
   blogs.sort((a,b) => a.likes-b.likes).reverse()
 
+  const padding = {
+    padding: 5
+  }
+
+  const grey = {
+    background: 'LightGray'
+  }
+
   return (
     <div>
+      <div style={grey}>
+        <Link style={padding} to='/'>blogs</Link>
+        <Link style={padding} to='/users'>users</Link>
+        {loggedUser
+          ? <>
+            {loggedUser.name} logged-in <button onClick={handleLogout}>logout</button>
+          </>
+          : null }
+      </div>
+
       <Notification/>
+
       {loggedUser===null ?
         <div>
           <h2>log in to application</h2>
           {loginForm()}
         </div> :
-        <div>
+        <>
           <h2>blogs</h2>
-          <p>{loggedUser.name} logged-in <button onClick={handleLogout}>logout</button></p>
-
           <Switch>
+            <Route path="/blogs/:id">
+              <BlogView blogs={blogs}/>
+            </Route>
             <Route path="/users/:id">
               <User users={users}/>
             </Route>
@@ -150,7 +171,7 @@ const App = () => {
               )}
             </Route>
           </Switch>
-        </div>
+        </>
       }
     </div>
   )

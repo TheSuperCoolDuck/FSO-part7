@@ -13,7 +13,7 @@ const User = ({ users }) => {
   }
 
   return (
-    <>
+    <div>
       <h2>{matchedUser.name}</h2>
       <h4>added blogs</h4>
       <ul>
@@ -22,7 +22,7 @@ const User = ({ users }) => {
             {b.title}
           </li>)}
       </ul>
-    </>
+    </div>
   )
 }
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 const Blog = ({ blog, likeBlog, deleteBlog }) => {
@@ -20,9 +21,9 @@ const Blog = ({ blog, likeBlog, deleteBlog }) => {
 
   return(
     <div className='blog' style={blogStyle}>
-      <div>
+      <Link to={`/blogs/${blog.id}`}>
         {blog.title} By {blog.author} <button onClick={handleDetailClick}>{buttonLabel}</button>
-      </div>
+      </Link>
 
       {viewDetails ?
         <>
