@@ -46,24 +46,21 @@ const App = () => {
       <Notification/>
       {loggedUser===null ?
         <LoginForm/> :
-        <>
-          <h2>blogs</h2>
-          <Switch>
-            <Route path="/blogs/:id">
-              <BlogView blogs={blogs}/>
-            </Route>
-            <Route path="/users/:id">
-              <User users={users}/>
-            </Route>
-            <Route path="/users">
-              <UserList users={users}/>
-            </Route>
-            <Route path="/">
-              <BlogForm/>
-              <BlogList blogs={blogs}/>
-            </Route>
-          </Switch>
-        </>
+        <Switch>
+          <Route path="/blogs/:id">
+            <BlogView blogs={blogs}/>
+          </Route>
+          <Route path="/users/:id">
+            <User users={users}/>
+          </Route>
+          <Route path="/users">
+            <UserList users={users}/>
+          </Route>
+          <Route path="/">
+            <BlogForm/>
+            <BlogList blogs={blogs}/>
+          </Route>
+        </Switch>
       }
     </div>
   )
