@@ -22,8 +22,9 @@ const Blog = ({ blog, likeBlog, deleteBlog }) => {
   return(
     <div className='blog' style={blogStyle}>
       <Link to={`/blogs/${blog.id}`}>
-        {blog.title} By {blog.author} <button onClick={handleDetailClick}>{buttonLabel}</button>
+        {blog.title} By {blog.author}
       </Link>
+      <button onClick={handleDetailClick}>{buttonLabel}</button>
 
       {viewDetails ?
         <>

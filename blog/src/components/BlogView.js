@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouteMatch, Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { likesBlog } from '../reducer/blogReducer'
+import { likesBlog, createComment } from '../reducer/blogReducer'
 
 const BlogView = ({ blogs }) => {
   const dispatch = useDispatch()
+
+  const [ comment, setComment ] = useState('')
 
   const match = useRouteMatch('/blogs/:id')
   const matchedBlog = match
@@ -15,7 +17,11 @@ const BlogView = ({ blogs }) => {
     return null
   }
 
-  console.log(matchedBlog)
+  const addComment = (event) => {
+    event.preventDefault()
+    dispatch(createComment(matchedBlog, comment))
+    setComment('')
+  }
 
   return (
     <div>
@@ -28,6 +34,26 @@ const BlogView = ({ blogs }) => {
         </button>
       </div>
       <div>added by {matchedBlog.user.name}</div>
+      <h3>comments</h3>
+
+
+      <form onSubmit={addComment}>
+        <input
+          id='comment'
+          value = {comment}
+          onChange={(event) => setComment(event.target.value)}
+        />
+        <button id='submit-button' type="submit">create</button>
+      </form>
+
+
+
+      <ul>
+        {matchedBlog.comments.map((c , i ) =>
+          <li key={i}>
+            {c}
+          </li>)}
+      </ul>
     </div>
   )
 }
