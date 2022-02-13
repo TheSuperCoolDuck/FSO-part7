@@ -8,6 +8,8 @@ import blogService from '../services/blogs'
 
 import { useDispatch } from 'react-redux'
 
+import { TextField, Button } from '@material-ui/core'
+
 const LoginForm = () => {
   const [username, setUsername] = useState([])
   const [password, setPassword] = useState([])
@@ -30,7 +32,7 @@ const LoginForm = () => {
       setUsername('')
       setPassword('')
     } catch (expection){
-      dispatch(createNotification('wrong username or password',5000))
+      dispatch(createNotification('error','wrong username or password',5000))
     }
   }
 
@@ -39,9 +41,8 @@ const LoginForm = () => {
       <h2>log in to application</h2>
       <form onSubmit={handleLogin}>
         <div>
-      username
-          <input
-            id="username"
+          <TextField
+            label="username"
             type="text"
             value={username}
             name="Username"
@@ -49,16 +50,15 @@ const LoginForm = () => {
           />
         </div>
         <div>
-      password
-          <input
-            id="password"
+          <TextField
+            label="password"
             type="text"
             value={password}
             name="Password"
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
-        <button id="login-button" type="submit">login</button>
+        <Button variant="contained" color="primary" id="login-button" type="submit">login</Button>
       </form>
     </div>
   )

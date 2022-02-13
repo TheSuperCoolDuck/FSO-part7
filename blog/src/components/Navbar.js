@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { clearUser } from '../reducer/loggedUserReducer'
+import { AppBar, Toolbar, Button } from '@material-ui/core'
 
 const Navbar = ({ loggedUser }) => {
 
@@ -14,26 +15,22 @@ const Navbar = ({ loggedUser }) => {
     dispatch(clearUser())
   }
 
-  const padding = {
-    padding: 5
-  }
-
-  const grey = {
-    background: 'LightGray'
-  }
-
   return (
-    <div>
-      <div style={grey}>
-        <Link style={padding} to='/'>blogs</Link>
-        <Link style={padding} to='/users'>users</Link>
+    <AppBar position='static'>
+      <Toolbar>
+        <Button color='inherit' component={Link} to="/">
+          blogs
+        </Button>
+        <Button color='inherit' component={Link} to="/users">
+          users
+        </Button>
         {loggedUser
           ? <>
-            {loggedUser.name} logged-in <button onClick={handleLogout}>logout</button>
+            {loggedUser.name} logged-in <Button variant='contained'  onClick={handleLogout}>logout</Button>
           </>
           : null }
-      </div>
-    </div>
+      </Toolbar>
+    </AppBar>
   )
 }
 

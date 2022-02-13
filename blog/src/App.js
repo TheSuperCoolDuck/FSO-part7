@@ -18,6 +18,8 @@ import { initalizeUsers } from './reducer/userReducer'
 
 import { Switch, Route } from 'react-router-dom'
 
+import Container from '@material-ui/core/Container'
+
 const App = () => {
 
   const dispatch = useDispatch()
@@ -41,7 +43,7 @@ const App = () => {
   }, [])
 
   return (
-    <div>
+    <Container>
       <Navbar loggedUser={loggedUser}/>
       <Notification/>
       {loggedUser===null ?
@@ -57,12 +59,14 @@ const App = () => {
             <UserList users={users}/>
           </Route>
           <Route path="/">
+            <h2>blogs</h2>
             <BlogForm/>
+            <br/>
             <BlogList blogs={blogs}/>
           </Route>
         </Switch>
       }
-    </div>
+    </Container>
   )
 }
 
